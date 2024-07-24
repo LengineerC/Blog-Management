@@ -1,6 +1,11 @@
 <script>
+import PageLayout from '@/components/PageLayout.vue';
+
 export default {
   name:"Home",
+  components:{
+    PageLayout,
+  },
   data() {
 
   },
@@ -9,7 +14,7 @@ export default {
 </script>
 
 <template>
-  <div>
-    <el-button>123</el-button>
-  </div>
+  <page-layout>
+
+  </page-layout>
 </template>
