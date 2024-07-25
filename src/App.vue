@@ -1,12 +1,17 @@
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import {
   House
 } from '@element-plus/icons-vue';
 import { RouterView } from 'vue-router';
+import { usePostStore } from './stores/post';
 
 const isCollapse=ref(false);
+const postStore=usePostStore();
 
+// onMounted(()=>{
+//   postStore.getAllPosts();
+// })
 </script>
 
 <template>

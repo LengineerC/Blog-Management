@@ -7,7 +7,9 @@ export default {
     PageLayout,
   },
   data() {
+    return{
 
+    }
   },
 
 }
@@ -15,6 +17,8 @@ export default {
 
 <template>
   <page-layout>
+    <el-card>
 
+    </el-card>
   </page-layout>
 </template>
