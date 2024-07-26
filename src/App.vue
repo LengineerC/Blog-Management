@@ -1,12 +1,8 @@
 <script setup>
-import { onMounted, ref } from 'vue'
-import {
-  House
-} from '@element-plus/icons-vue';
+import { onMounted} from 'vue'
 import { RouterView } from 'vue-router';
 import { usePostStore } from './stores/post';
 
-const isCollapse=ref(false);
 const postStore=usePostStore();
 
 // onMounted(()=>{
@@ -15,6 +11,10 @@ const postStore=usePostStore();
 </script>
 
 <template>
+  <RouterView />
+</template>
+
+<!-- <template>
   <div class="common-layout">
     <el-container>
       <el-header>
@@ -96,4 +96,4 @@ const postStore=usePostStore();
 .el-container.is-vertical{
   height: 100%;
 }
-</style>
+</style> -->

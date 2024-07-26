@@ -66,6 +66,6 @@ export default{
   display: flex;
   flex: 1;
   width: auto;
-  margin: 20px 10px;
+  margin: 20px 10px 10px;
 }
 </style>

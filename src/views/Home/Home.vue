@@ -1,5 +1,5 @@
 <script>
-import PageLayout from '@/components/PageLayout.vue';
+import PageLayout from '@/components/PageLayout/PageLayout.vue';
 
 export default {
   name:"Home",
@@ -18,7 +18,7 @@ export default {
 <template>
   <page-layout>
     <el-card>
-
+      
     </el-card>
   </page-layout>
 </template>
