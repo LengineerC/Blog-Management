@@ -11,7 +11,7 @@ export default defineConfig({
   plugins: [
     vue(),
     AutoImport({
-      resolvers:[ElementPlusResolver]
+      resolvers: [ElementPlusResolver]
     }),
     Components({
       resolvers: [ElementPlusResolver()],
@@ -22,7 +22,8 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
-  server:{
-    port:3000,
-  }
+  server: {
+    port: 3000,
+  },
+
 })

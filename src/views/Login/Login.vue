@@ -1,9 +1,12 @@
 <script>
+import { useUserStore } from '@/stores/user';
 import { reactive } from 'vue';
+import { ElLoading } from 'element-plus';
 
 export default{
   name:"Login",
   setup(){
+    const userStore=useUserStore();
     const rules = reactive({
       username: [
         { required: true, message: 'username is not null', trigger: 'blur' },
@@ -15,6 +18,7 @@ export default{
 
     return {
       rules,
+      userStore,
     }
   },
   components:{
@@ -40,24 +44,37 @@ export default{
   },
   methods:{
     async handleLogin(){
+      const loginCard=document.getElementsByClassName("login-card")[0];
+      const loading=ElLoading.service({
+        target:loginCard,
+        lock:true
+      })
+
       const {formRef}=this.$refs;
       await formRef.validate((valid,fields)=>{
+        const callback=(code)=>{
+          if(code){
+            this.$router.push('/Home');
+          }
+          loading.close();
+        }
+
         if(valid){
           const user={
             username:this.username,
             password:this.password,
           };
-          console.log(user);
+          // console.log(user);
           if(this.savePassword){
             localStorage.setItem("loginUser",JSON.stringify(user));
             // localStorage.setItem("loginUser",user);
           }
-
+          this.userStore.login(user,callback);
         }else{
           console.log("fields error",fields);
         }
-      });
 
+      });
     }
   }
 }
@@ -67,7 +84,7 @@ export default{
   <div class="login-main">
     <div class="login-main-bg"/>
     
-    <div class="login-card">
+    <div class="login-card" id="login-card">
       <el-card>
         <div class="form-title">Login</div>
 
@@ -124,7 +141,7 @@ export default{
 
   .login-card{
     width: 30%;
-    height: 40%;
+    height: auto;
 
     :deep(.el-card.is-always-shadow){
       box-shadow: 0 0 15px #3c3c3c87;

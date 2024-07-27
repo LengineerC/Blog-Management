@@ -1,16 +1,30 @@
 import axios from "axios";
 import { URL } from "../ip";
+import { useRouter } from "vue-router";
+import { NOT_LOGIN } from "./enum";
 
 export function request(url,payload){
+    const {method,params}=payload;
     const requestUrl=URL+url;
-    const options={
-        url:requestUrl,
-        ...payload,
+    let options={};
+    if(method==='get'){
+        options={
+            url:requestUrl,
+            ...payload,
+        }
+    }else if(method==='post'){
+        options={
+            url:requestUrl,
+            method,
+            data:params
+        }
     }
-
-    return axios(options)
-            .then(res=>res.data)
-            .catch(e=>{
-                console.log(e);
-            })
+    const token=localStorage.getItem("token");
+    const headers={
+        token,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    };
+    options['headers']=headers;
+    return axios(options);
 }
