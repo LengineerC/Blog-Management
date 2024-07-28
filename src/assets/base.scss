@@ -14,4 +14,9 @@ body{
 
 .el-card.is-always-shadow{
     width: 100%;
+
+    .el-card__body{
+        height: 100%;
+        box-sizing: border-box;
+    }
 }

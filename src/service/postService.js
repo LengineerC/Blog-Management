@@ -9,6 +9,27 @@ export function getAllPosts(params){
     });
 }
 
+export function getPostById(params){
+    return request(createUrl(POST_API.POST),'id'),{
+        method:"get",
+        params
+    }
+}
+
+export function getPostByPage(params){
+    return request(createUrl(POST_API.POST,"page"),{
+        method:"get",
+        params
+    })
+}
+
+export function addPost(params){
+    return request(createUrl(POST_API.POST,"add"),{
+        method:"post",
+        params
+    })
+}
+
 export function getAllTags(params){
     return request(createUrl(POST_API.TAG,"getAll"),{
         method:'get',

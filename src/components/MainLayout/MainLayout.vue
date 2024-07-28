@@ -47,7 +47,6 @@
             </div>
             <el-menu 
             :collapse="isCollapse"
-
             default-active="1"
             >
               <RouterLink to="/">
@@ -59,6 +58,12 @@
                 </el-menu-item>
               </RouterLink>
 
+              <RouterLink to="/Post">
+                <el-menu-item index="2">
+                  <el-icon><Document /></el-icon>
+                  <template #title><span>Posts management</span></template>
+                </el-menu-item>
+              </RouterLink>
             </el-menu>
           </el-scrollbar>
         </el-aside>
