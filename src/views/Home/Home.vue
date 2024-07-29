@@ -1,7 +1,7 @@
 <script>
 import PageLayout from '@/components/PageLayout/PageLayout.vue';
 import { usePostStore } from '@/stores/post';
-import { onMounted, nextTick } from 'vue';
+import { onMounted, nextTick, reactive, toRefs, ref } from 'vue';
 import * as echarts from "echarts";
 
 export default {
@@ -13,37 +13,14 @@ export default {
 
   data() {
     return {
-      catChartInstance: null,
-      tagChartInstance: null,
+
     }
-  },
-
-  methods: {
-    initChart() {
-      const { tagChart, catChart } = this.$refs;
-      this.tagChartInstance = echarts.init(tagChart);
-      this.catChartInstance = echarts.init(catChart);
-    },
-    resizeCharts() {
-      this.tagChartInstance && this.tagChartInstance.resize();
-      this.catChartInstance && this.catChartInstance.resize();
-    },
-  },
-
-  mounted() {
-    nextTick(() => {
-      this.initChart();
-      window.addEventListener('resize', this.resizeCharts);
-    });
-    this.initChart();
-  },
-
-  beforeDestroy() {
-    window.removeEventListener('resize', this.resizeCharts);
   },
 
   setup() {
     const postStore = usePostStore();
+    const tagCounts=ref({});
+    const categoryCounts=ref({});
 
     onMounted(() => {
       if (postStore.total === 0) {
@@ -51,15 +28,161 @@ export default {
           page: 0,
           pageSize: 0,
         });
+        postStore.getAllPosts();
         postStore.getAllTags();
         postStore.getAllCategories();
       }
+
+      const initCounts=()=>{
+        if(Object.keys(postStore.tagCountDetails).length>0){
+          tagCounts.value={...postStore.tagCountDetails};
+        }
+  
+        if(Object.keys(postStore.categoryCountDetails).length>0){
+          categoryCounts.value={...postStore.categoryCountDetails};
+        }
+      }
+
+      initCounts();
+
+      postStore.$subscribe((mutation,state)=>{
+        initCounts();
+      });
 
     });
 
     return {
       postStore,
+      tagCounts,
+      categoryCounts,
     }
+  },
+
+  methods: {
+    initTagChart() {
+      const { tagChart } = this.$refs;
+      return echarts.init(tagChart);
+    },
+    
+    initCategoryChart(){
+      const {catChart}=this.$refs;
+      return echarts.init(catChart);
+    },
+
+    createTagChart(){
+      //echarts实例设置为响应式bug https://blog.csdn.net/zzsan/article/details/127121761
+
+      let tagChartInstance = this.initTagChart();
+      const tagOption={
+        grid: {
+          top: '15%',
+          bottom: '15%', 
+          left: '10%',
+          right: '10%'
+        },
+        xAxis: {
+          type: 'category',
+          data: Object.keys(this.tagCounts),
+        },
+        yAxis: {
+          type: 'value',
+          splitLine: {
+            show: false,
+          },
+        },
+        tooltip: {
+          trigger: "axis"
+        },
+        dataZoom:{
+          start:0,
+          type:"inside",
+        },
+        color:[
+          "#2fa1ff"
+        ],
+        series: {
+          data: Object.values(this.tagCounts),
+          type: 'bar'
+        }
+        
+      };
+
+      tagChartInstance.setOption(tagOption);
+    },
+
+    createCategoryChart(){
+      let catChartInstance = this.initCategoryChart();
+
+      const categoryOption={
+        grid: {
+          top: '15%',
+          bottom: '15%',
+          left: '10%',
+          right: '10%'
+        },
+        xAxis: {
+          type: 'category',
+          data: Object.keys(this.categoryCounts),
+        },
+        yAxis: {
+          type: 'value',
+          splitLine: {
+            show: false,
+          },
+        },
+        tooltip: {
+          trigger: "axis",
+        },
+        dataZoom:{
+          start:0,
+          type:"inside",
+        },
+        color:[
+          "#2fa1ff"
+        ],
+        series: {
+          data: Object.values(this.categoryCounts),
+          type: 'bar'
+        }
+        
+      }
+
+      catChartInstance.setOption(categoryOption);
+    },
+
+    resizeCharts() {
+      this.tagChartInstance && this.tagChartInstance.resize();
+      this.catChartInstance && this.catChartInstance.resize();
+    },
+  },
+
+  mounted() {
+    window.addEventListener('resize', this.resizeCharts);
+
+    if(Object.keys(this.tagCounts)>0){
+      this.createTagChart();
+    }
+    if(Object.keys(this.categoryCounts)>0){
+      this.createCategoryChart();
+    }
+  },
+
+  watch:{
+    tagCounts(newValue){
+      if(Object.keys(newValue).length>0){
+        this.createTagChart();
+      }
+    },
+
+    categoryCounts(newValue){
+      if(Object.keys(newValue).length>0){
+        this.createCategoryChart();
+      }
+    },
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('resize', this.resizeCharts);
   },
 
 }

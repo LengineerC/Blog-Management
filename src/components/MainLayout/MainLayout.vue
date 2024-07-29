@@ -180,6 +180,15 @@ function handleSignOut() {
     @extend .flex-hv-center;
     height: 25px;
     background-color: #2fa1ff6f;
+    transition: 0.15s;
+
+    &:hover{
+      background-color: #53b1ff6f;
+    }
+
+    &:active{
+      background-color: #77c0fc6f;
+    }
   }
 }
 

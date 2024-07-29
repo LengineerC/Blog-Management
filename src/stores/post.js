@@ -19,9 +19,41 @@ export const usePostStore=defineStore("post",{
         tags:[],
         categories:[],
     }),
-    getters:{
 
+    getters:{
+        tagCountDetails:state=>{
+            const {posts,tags}=state;
+            let tagCounts={};
+            tags.forEach(tag=>{
+                tagCounts[tag.name]=0
+            })
+            posts.forEach(post=>{
+                const {tags}=post;
+                tags.forEach(tag=>{
+                    tagCounts[tag.name]++;
+                })
+            });
+
+            return tagCounts;
+        },
+
+        categoryCountDetails:state=>{
+            const {posts,categories}=state;
+            let categoryCounts={};  
+            categories.forEach(category=>{
+                categoryCounts[category.name]=0;
+            });
+            posts.forEach(post=>{
+                const {categories}=post;
+                categories.forEach(category=>{
+                    categoryCounts[category.name]++;
+                });
+            });
+
+            return categoryCounts;
+        },
     },
+
     actions:{
         async getAllPosts(){
             const response=await getAllPosts();
