@@ -1,7 +1,7 @@
 <script>
 import PageLayout from '@/components/PageLayout/PageLayout.vue';
 import { usePostStore } from '@/stores/post';
-import { onMounted, nextTick, reactive, toRefs, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import * as echarts from "echarts";
 
 export default {

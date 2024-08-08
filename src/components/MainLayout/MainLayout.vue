@@ -58,7 +58,7 @@
                 </el-menu-item>
               </RouterLink>
 
-              <RouterLink to="/Post">
+              <RouterLink to="/Posts">
                 <el-menu-item index="2">
                   <el-icon><Document /></el-icon>
                   <template #title><span>Posts management</span></template>

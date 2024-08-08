@@ -1,26 +1,37 @@
-<script>
+<script setup>
 import { ArrowRight } from '@element-plus/icons-vue';
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
-export default{
-  name:"PageLayout",
-  components:{
-    ArrowRight,
-  },
-}
+const route=useRoute();
+const pathArr=ref([]);
+
+onMounted(()=>{
+  let tempPathArr=route.fullPath.split('/').filter(path=>path!=='');
+  pathArr.value=tempPathArr;
+})
 
 </script>
 
 <template>
   <div class="page-layout-main">
     <div class="nav-container">
-      <el-breadcrumb separator-icon="ArrowRight">
+      <el-breadcrumb :separator-icon="ArrowRight">
         <el-breadcrumb-item :to="{ path: '/' }">Home</el-breadcrumb-item>
+
+        <el-breadcrumb-item 
+        v-for="(path,index) in pathArr" 
+        :to="index!==pathArr.length-1?{path:path}:null"
+        :key="index"
+        >
+          {{ path }}
+        </el-breadcrumb-item>
       </el-breadcrumb>
 
       <hr class="hr-twill">
 
       <div class="path-name">
-        Path
+        {{ pathArr[pathArr.length-1] || '' }}
       </div>
     </div>
 
