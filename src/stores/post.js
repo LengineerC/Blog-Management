@@ -70,7 +70,7 @@ export const usePostStore=defineStore("post",{
             }
         },
 
-        async getPostByPage(payload){
+        async getPostByPage(payload,callback){
             const response=await getPostByPage(payload);
             const {code}=response;
             if(code===1){
@@ -81,6 +81,10 @@ export const usePostStore=defineStore("post",{
                 };
                 this.total=total;
                 this.postList=list;
+
+                if(typeof callback==="function"){
+                    callback(list);
+                }
             }else{
                 ElMessage({
                     showClose: true,
