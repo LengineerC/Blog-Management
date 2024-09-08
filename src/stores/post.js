@@ -75,6 +75,7 @@ export const usePostStore=defineStore("post",{
             const {code}=response;
             if(code===1){
                 const {data:{page,pageSize,total,list}}=response;
+                
                 this.pagination={
                     page,
                     pageSize
