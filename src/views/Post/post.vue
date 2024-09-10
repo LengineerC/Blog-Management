@@ -1,3 +1,77 @@
+<script setup>
+import PageLayout from '@/components/PageLayout/PageLayout.vue';
+import router from '@/router';
+import { usePostStore } from '@/stores/post';
+import { ElMessageBox, ElMessage } from 'element-plus';
+import { onMounted, ref } from 'vue';
+
+const postStore=usePostStore();
+const tableData=ref([]);
+const loading=ref(true);
+const pagination=ref({
+  page:1,
+  pageSize:10,
+});
+
+function initTableData(postList){
+  tableData.value=postList.map(post=>{
+    return({
+      ...post.post,
+      tags:post.tags,
+      categories:post.categories,
+    })
+  });
+  loading.value=false;
+}
+
+function handleFresh(){
+  loading.value=true;
+  pagination.value={
+    page:1,
+    pageSize:10,
+  }
+  postStore.getPostByPage(pagination.value,initTableData)
+}
+
+function handlePageChange(currentPage){
+  loading.value=true;
+  pagination.value={
+    page:currentPage,
+    pageSize:10,
+  }
+  postStore.getPostByPage(pagination.value,initTableData);
+}
+
+function handleDelete(id){
+  ElMessageBox.confirm(
+    "确定删除文章？",
+    "Warning",
+    {
+      confirmButtonText: 'OK',
+      cancelButtonText: 'Cancel',
+      type: 'warning',
+    }
+  ).then(()=>{
+    const payload={
+      postId:id
+    }
+    postStore.deletePost(payload,handleFresh);
+
+  }).catch(()=>{
+    ElMessage({
+      type: 'info',
+      message: 'Delete canceled',
+    })
+  });
+  
+}
+
+onMounted(()=>{
+  postStore.getPostByPage(pagination.value,initTableData);
+});
+
+</script>
+
 <template>
   <PageLayout>
     <el-card>
@@ -8,7 +82,7 @@
           </el-icon>
           刷新
         </el-button>
-        <el-button style="width: 75px;">
+        <el-button style="width: 75px;" @click="()=>{router.push('/Posts/Edit')}">
           <el-icon :size="15" style="margin-right: 5px;">
             <Plus />
           </el-icon>
@@ -51,7 +125,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column width="130" label="Password">
+        <el-table-column width="130" label="Password" align="center">
           <template #default="scope">
             <el-popover 
             effect="dark" 
@@ -98,17 +172,23 @@
         label="Operations"
         align="center"
         >
-          <!-- <template #default="scope"> -->
-            <el-icon :size="15">
-              <Edit />
-            </el-icon>
+          <template #default="scope">
+            <RouterLink :to="`/Posts/Edit/${scope.row.postId}`">
+              <a class="op-btn">
+                <el-icon :size="15">
+                  <Edit />
+                </el-icon>
+              </a>
+            </RouterLink>
 
             <el-divider direction="vertical"/>
 
-            <el-icon :size="15">
-              <Delete />
-            </el-icon>
-          <!-- </template> -->
+            <a class="op-btn" @click="handleDelete(scope.row.postId)">
+              <el-icon :size="15">
+                <Delete />
+              </el-icon>
+            </a>
+          </template>
         </el-table-column>
       </el-table>
       <el-pagination 
@@ -119,56 +199,9 @@
       v-model:currentPage="pagination.page"
       />
     </el-card>
+
   </PageLayout>
 </template>
-
-<script setup>
-import PageLayout from '@/components/PageLayout/PageLayout.vue';
-import { usePostStore } from '@/stores/post';
-import { onMounted, ref } from 'vue';
-
-const postStore=usePostStore();
-const tableData=ref([]);
-const loading=ref(true);
-const pagination=ref({
-  page:1,
-  pageSize:10,
-});
-
-function initTableData(postList){
-  tableData.value=postList.map(post=>{
-    return({
-      ...post.post,
-      tags:post.tags,
-      categories:post.categories,
-    })
-  });
-  loading.value=false;
-}
-
-function handleFresh(){
-  loading.value=true;
-  pagination.value={
-    page:1,
-    pageSize:10,
-  }
-  postStore.getPostByPage(pagination.value,initTableData)
-}
-
-function handlePageChange(currentPage){
-  loading.value=true;
-  pagination.value={
-    page:currentPage,
-    pageSize:10,
-  }
-  postStore.getPostByPage(pagination.value,initTableData);
-}
-
-onMounted(()=>{
-  postStore.getPostByPage(pagination.value,initTableData);
-});
-
-</script>
 
 <style lang="scss" scoped>
 .btn-line{
@@ -188,6 +221,19 @@ onMounted(()=>{
 .el-pagination{
   justify-content: end;
   padding-right: 1%;
+}
+
+.op-btn{
+  color: rgb(47,161,255);
+  transition: 0.3s;
+
+  &:hover{
+    color: rgb(146, 206, 255);
+  }
+
+  &:active{
+    color: rgb(12, 142, 248);
+  }
 }
 
 </style>

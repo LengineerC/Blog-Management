@@ -10,10 +10,10 @@ export function getAllPosts(params){
 }
 
 export function getPostById(params){
-    return request(createUrl(POST_API.POST),'id'),{
+    return request(createUrl(POST_API.POST,'id'),{
         method:"get",
         params
-    }
+    })
 }
 
 export function getPostByPage(params){
@@ -40,6 +40,13 @@ export function getAllTags(params){
 export function getAllCategories(params){
     return request(createUrl(POST_API.CATEGORY,"getAll"),{
         method:"get",
+        params
+    })
+}
+
+export function deletePostById(params){
+    return request(createUrl(POST_API.POST,`delete`),{
+        method:"delete",
         params
     })
 }

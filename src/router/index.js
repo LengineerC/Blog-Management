@@ -27,10 +27,16 @@ const router = createRouter({
           name:"Home",
           component:()=>import("@/views/Home/Home.vue"),
         },
+
         {
           path:"/Posts",
           name:"Posts",
           component:()=>import("@/views/Post/Post.vue"),
+        },
+        {
+          path:"/Posts/Edit/:id?",
+          name:"Edit",
+          component:()=>import("@/views/Post/Edit.vue"),
         },
       ]
     },

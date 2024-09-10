@@ -1,4 +1,4 @@
-import { getAllCategories, getAllPosts, getAllTags, getPostByPage } from '@/service/postService';
+import * as postService from '@/service/postService';
 import { ElMessage } from 'element-plus';
 import { defineStore } from 'pinia'
 
@@ -14,6 +14,8 @@ export const usePostStore=defineStore("post",{
             pageSize:0,
         },
         postList:[],//分页的文章
+        currentPost:{},//通过id获取到的文章
+
         total:0,
 
         tags:[],
@@ -56,7 +58,7 @@ export const usePostStore=defineStore("post",{
 
     actions:{
         async getAllPosts(){
-            const response=await getAllPosts();
+            const response=await postService.getAllPosts();
             const {code}=response;
             if(code===1){
                 const {data}=response;
@@ -71,7 +73,7 @@ export const usePostStore=defineStore("post",{
         },
 
         async getPostByPage(payload,callback){
-            const response=await getPostByPage(payload);
+            const response=await postService.getPostByPage(payload);
             const {code}=response;
             if(code===1){
                 const {data:{page,pageSize,total,list}}=response;
@@ -95,8 +97,23 @@ export const usePostStore=defineStore("post",{
             }
         },
 
+        async getPostById(payload){
+            const response=await postService.getPostById(payload);
+            const {code,data={}}=response;
+            if(code===1){
+                this.currentPost=data;
+            }else{
+                ElMessage({
+                    showClose: true,
+                    message: '获取文章详情失败',
+                    type: 'error',
+                });
+            }
+
+        },
+
         async getAllTags(){
-            const response=await getAllTags();
+            const response=await postService.getAllTags();
             const {code}=response;
             if(code===1){
                 const {data}=response;
@@ -111,7 +128,7 @@ export const usePostStore=defineStore("post",{
         },
 
         async getAllCategories(){
-            const response=await getAllCategories();
+            const response=await postService.getAllCategories();
             const {code}=response;
             if(code===1){
                 const {data}=response;
@@ -123,6 +140,28 @@ export const usePostStore=defineStore("post",{
                     type: 'error',
                 });
             }
-        }
+        },
+
+        async deletePost(payload,callback){
+            const response=await postService.deletePostById(payload);
+            const {code}=response;
+            if(code===1){
+                ElMessage({
+                    showClose: true,
+                    message: '删除文章成功',
+                    type: 'success',
+                });
+
+                if(typeof callback==='function'){
+                    callback();
+                }
+            }else{
+                ElMessage({
+                    showClose: true,
+                    message: '删除文章失败',
+                    type: 'error',
+                });
+            }
+        },
     }
 });

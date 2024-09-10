@@ -4,7 +4,7 @@ export function createUrl(api,path){
     if(api[0]!=='/'){
         api='/'+api;
     }
-
+    
     let pathArr=path.split('');
     if(pathArr[0]==='/'){
         pathArr.shift();

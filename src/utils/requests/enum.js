@@ -5,3 +5,8 @@ export const POST_API={
     TAG:"tag",
     CATEGORY:"category",
 }
+
+export const EDIT_CONDITION={
+    ADD:0,
+    EDIT:1,
+}
