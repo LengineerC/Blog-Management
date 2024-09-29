@@ -33,6 +33,11 @@ export default{
   },
   mounted(){
     let user=localStorage.getItem("loginUser");
+    document.addEventListener("keydown",(e)=>{
+      if(e.key==="Enter"){
+        this.handleLogin();
+      }
+    });
     try {
       user=JSON.parse(user);
       const {username,password}=user;

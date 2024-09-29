@@ -12,7 +12,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
 
-app.use(createPinia())
 app.use(router)
+app.use(createPinia()).mount('#app');
 
-app.mount('#app')
+// app.mount('#app')
